@@ -4,7 +4,6 @@ import { fileURLToPath } from "url";
 import path from "path";
 import fs from "fs/promises";
 import { parse } from "url";
-import axios from "axios"; // Import axios for uploading image
 import StealthPlugin from "puppeteer-extra-plugin-stealth";
 import RecaptchaPlugin from "puppeteer-extra-plugin-recaptcha";
 import sharp from "sharp";

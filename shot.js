@@ -4,6 +4,7 @@ import { fileURLToPath } from "url";
 import path from "path";
 import fs from "fs/promises";
 import { parse } from "url";
+import axios from "axios"; // Import axios for uploading image
 import StealthPlugin from "puppeteer-extra-plugin-stealth";
 import RecaptchaPlugin from "puppeteer-extra-plugin-recaptcha";
 import sharp from "sharp";
@@ -151,18 +152,24 @@ app.get("/screenshot/:url(*)", async (req, res) => {
       .jpeg() // Convert to JPG
       .toBuffer();
 
-    await fs.writeFile(path.join(__dirname, "images", filename), finalImage);
+    // Set response headers for downloading
+    res.set({
+      "Content-Disposition": `attachment; filename="${filename}"`,
+      "Content-Type": "image/jpeg",
+    });
 
-    res.json({ message: "Screenshot captured successfully.", filename });
+    // Send the image buffer as an attachment for download
+    res.send(finalImage);
   } catch (error) {
     console.error("Error capturing screenshot:", error.message);
 
-    // Log the error details to a file for further analysis
+    // Log the error details
     await fs.appendFile(
       "error.log",
       `${new Date().toISOString()} - Error: ${error.message}\n`
     );
 
+    // Handle error response
     if (error.message.includes("net::ERR")) {
       res
         .status(500)
@@ -180,3 +187,4 @@ app.get("/screenshot/:url(*)", async (req, res) => {
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
+

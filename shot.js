@@ -31,21 +31,6 @@ function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-async function getUniqueFilename(url, hostname, randomInteger) {
-  let filename = `${hostname}-${randomInteger}.jpg`;
-  let counter = 1;
-  while (
-    await fs
-      .access(path.join(__dirname, filename))
-      .then(() => true)
-      .catch(() => false)
-  ) {
-    filename = `${hostname}-${randomInteger}-${counter}.jpg`;
-    counter++;
-  }
-  return filename;
-}
-
 // Middleware to check for API key
 app.use((req, res, next) => {
   const apiKey = req.query.apiKey || req.headers["x-api-key"];
@@ -61,15 +46,19 @@ app.use((req, res, next) => {
 // Define a route to capture a screenshot
 app.get("/screenshot/:url(*)", async (req, res) => {
   const url = req.params.url;
-  const { hostname } = parse(url);
+  let hostname;
+  try {
+    hostname = new URL(url).hostname;
+  } catch (error) {
+    console.error("Error parsing URL:", error);
+    return res.status(400).json({ error: "Invalid URL format" });
+  }
   const randomInteger = getRandomInt(1, 9999);
   const currentDate = new Date().toLocaleDateString();
   const currentTime = new Date().toLocaleTimeString([], { hour12: true }); // Get current time in AM/PM format
-  let filename;
+  const filename = `${hostname}-${randomInteger}.jpg`; // Generate a filename directly
 
   try {
-    filename = await getUniqueFilename(url, hostname, randomInteger);
-
     const browser = await puppeteer.launch({
       headless: true,
       args: ["--no-sandbox", "--disable-setuid-sandbox"],

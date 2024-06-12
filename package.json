@@ -1,0 +1,25 @@
+{
+  "name": "screenshot",
+  "version": "1.0.0",
+  "main": "shot.js",
+  "type": "module",
+  "scripts": {
+    "start": "node shot.js",
+    "dev": "nodemon shot.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "capture-website": "^4.1.0",
+    "express": "^4.19.2",
+    "puppeteer-extra": "^3.3.6",
+    "puppeteer-extra-plugin-recaptcha": "^3.6.8",
+    "puppeteer-extra-plugin-stealth": "^2.11.2",
+    "sharp": "^0.33.4"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.3"
+  }
+}

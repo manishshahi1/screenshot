@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node shot.js",
     "dev": "nodemon shot.js",
-    "postinstall": "npm install --platform=linux --arch=x64 sharp"
+    "postinstall": "npm install --platform=linux --arch=x64 sharp && npx puppeteer browsers install chrome"
   },
   "keywords": [],
   "author": "",
